@@ -29,9 +29,10 @@ movielens_path = 'ml-100k/u.data'  # 修改为实际路径
 dataset = load_movielens_100k(movielens_path)
 
 # 准备数据
-train_data, test_data = train_test_split(dataset, test_size=0.2, random_state=42)
+train_data, test_data = train_test_split(dataset, test_size=0.1, random_state=42)
 edge_index, edge_weight = create_edge_data(train_data)
 edge_index=edge_index.to(device)
+
 edge_weight=edge_weight.to(device)
 # 创建 PyG 数据对象
 data = Data(edge_index=edge_index)
@@ -42,13 +43,14 @@ data = Data(edge_index=edge_index)
 # 参数设置
 num_users = dataset['user_id'].nunique()
 num_items = dataset['item_id'].nunique()
-embedding_dim = 64
+edge_index[1]+=num_users
+embedding_dim = 128
 learning_rate = 0.01
-epochs = 600
+epochs = 500
 x=torch.randn((num_users+num_items, embedding_dim))
 # 模型、优化器和损失函数
 
-model = LightGCNModel(num_users, num_items, embedding_dim,initial_embedding=x).to(device)
+model = LightGCNModel(num_users, num_items, embedding_dim,initial_embedding=x,num_layers=20).to(device)
 model=model.double()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 criterion = nn.MSELoss()
@@ -67,6 +69,9 @@ for epoch in range(epochs):
 # 测试模型
 model.eval()
 test_edge_index, test_edge_weight = create_edge_data(test_data)
+test_edge_index = test_edge_index.to(device)
+test_edge_index[1]+=num_users
+test_edge_weight = test_edge_weight.to(device)
 with torch.no_grad():
     out = model(test_edge_index)
     test_loss = criterion(out, test_edge_weight)
