@@ -9,5 +9,5 @@ from torch_geometric.utils import degree
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # Load the dataset
-dataset = MovieLens100K(root='data/MovieLens100K')
+dataset = MovieLens100K(root='dataset')
 data = dataset[0]
