@@ -31,8 +31,7 @@ class evaluator():
                 self.GT[j] = temp[temp[:,0]==j][:,1]
 
         
-    def precision_and_recall(self):
-        print('*** precision ***')     
+    def precision_and_recall(self):     
         maxn = max(self.N)
         self.p = np.zeros(maxn)
         self.r = np.zeros(maxn)
