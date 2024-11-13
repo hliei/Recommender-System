@@ -6,7 +6,7 @@ from tqdm import tqdm
 from evaluator import evaluator as ev
 from helper_func import  bipartite_dataset, deg_dist,gen_top_k
 from data_loader import Data_loader
-from pngnn import PNGNN
+from lightgcn import LightGCN
 
 def main(cfg):
     dataset=Data_loader(cfg['version'])
@@ -18,7 +18,7 @@ def main(cfg):
     neg_dist = deg_dist(train,dataset.num_v)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model= PNGNN(train, dataset.num_u,dataset.num_v,threshold=cfg['threshold'],num_layers = cfg['num_layers'],MLP_layers=cfg['MLP_layers'],dim=cfg['dim'],device=device,reg=cfg['reg'])
+    model= LightGCN(train, dataset.num_u,dataset.num_v,threshold=cfg['threshold'],num_layers = cfg['num_layers'],MLP_layers=cfg['MLP_layers'],dim=cfg['dim'],device=device,reg=cfg['reg'])
     model.data_p.to(device)
     model.to(device)
     optimizer = optim.Adam(model.parameters(), lr = cfg['lr'])

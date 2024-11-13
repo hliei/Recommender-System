@@ -5,10 +5,10 @@ from torch_geometric.data import Data
 from lightgcncov import LightGConv
 import torch.nn.functional as F
 
-class PNGNN(nn.Module):
+class LightGCN(nn.Module):
     def __init__(self,train,num_u,num_v,threshold,num_layers = 2,MLP_layers=2,dim = 64,reg=1e-4
                  ,device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")):
-        super(PNGNN,self).__init__()
+        super(LightGCN,self).__init__()
         self.M = num_u
         self.N = num_v
         self.num_layers = num_layers
