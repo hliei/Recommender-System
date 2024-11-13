@@ -18,8 +18,8 @@ def main(cfg):
     neg_dist = deg_dist(train,dataset.num_v)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model= LightGCN(train, dataset.num_u,dataset.num_v,threshold=cfg['threshold'],num_layers = cfg['num_layers'],MLP_layers=cfg['MLP_layers'],dim=cfg['dim'],device=device,reg=cfg['reg'])
-    model.data_p.to(device)
+    model= LightGCN(train, dataset.num_u,dataset.num_v,num_layers = cfg['num_layers'],dim=cfg['dim'],device=device,reg=cfg['reg'])
+    model.data.to(device)
     model.to(device)
     optimizer = optim.Adam(model.parameters(), lr = cfg['lr'])
     
@@ -35,12 +35,12 @@ def main(cfg):
         training_dataset.negs_gen_()
         
         ds = DataLoader(training_dataset,batch_size=cfg['batch_size'],shuffle=True)
-        pbar = tqdm(desc = 'Version : {} Epoch {}/{}'.format(cfg['version'],EPOCH,cfg['epoch']),total=len(ds),position=0)
+        pbar = tqdm(desc = 'Epoch {}/{}'.format(cfg['version'],EPOCH,cfg['epoch']),total=len(ds),position=0)
         
         for u,v,w,negs in ds:  # index of batch users, items, ratings, negative samples
             total_counts+=len(u)
             optimizer.zero_grad()
-            loss = model(u,v,w,negs,device)
+            loss = model(u,v,negs,device)
             loss.backward()                
             optimizer.step()
             LOSS+=loss.item() * len(ds)
@@ -51,7 +51,7 @@ def main(cfg):
         pbar.close()
         print('Epoch : %s, Loss : %s'%(EPOCH,LOSS/total_counts))
 
-        if EPOCH%20 ==1:
+        if EPOCH%5 ==0:
 
             model.eval()
             emb = model.get_embedding()
@@ -74,8 +74,7 @@ cfg = { 'version':1,
         'threshold':3.5,
         'num_neg_samples':40,
         'num_layers':4,
-        'MLP_layers':2,
-        'epoch':100,
+        'epoch':20,
         'reg':0.05
 }
 
