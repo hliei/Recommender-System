@@ -35,7 +35,7 @@ def main(cfg):
         training_dataset.negs_gen_()
         
         ds = DataLoader(training_dataset,batch_size=cfg['batch_size'],shuffle=True)
-        pbar = tqdm(desc = 'Version : {} Epoch {}/{}'.format(cfg['version'],EPOCH,cfg['epoch']),total=len(ds),position=0)
+        pbar = tqdm(desc = 'Epoch {}/{}'.format(EPOCH,cfg['epoch']),total=len(ds),position=0)
         
         for u,v,w,negs in ds:  # index of batch users, items, ratings, negative samples
             total_counts+=len(u)
