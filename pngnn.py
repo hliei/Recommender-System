@@ -93,9 +93,9 @@ class PNGNN(nn.Module):
     
     def forward(self,u,v,w,n,device):
         emb = self.get_embedding()
-        u_ = emb[u].to(device)
-        v_ = emb[v].to(device)
-        n_ = emb[n].to(device)
+        u_ = emb[u].to(device) # (batch_size, dim)
+        v_ = emb[v].to(device) # (batch_size, dim)
+        n_ = emb[n].to(device) # (batch_size, num_neg_samples, dim)
         w_ = w.to(device)
         positivebatch = torch.mul(u_ , v_ )
         negativebatch = torch.mul(u_.view(len(u_),1,self.embed_dim),n_)  
