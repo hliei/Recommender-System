@@ -74,7 +74,7 @@ cfg = { 'version':1,
         'threshold':3.5,
         'num_neg_samples':40,
         'num_layers':4,
-        'epoch':20,
+        'epoch':50,
         'reg':0.05
 }
 
