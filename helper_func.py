@@ -4,7 +4,7 @@ import torch
 
 
 
-class bipartite_dataset(Dataset):  
+class my_dataset(Dataset):  
     def __init__(self, train,neg_dist,threshold,num_u,num_v,num_neg_samples): 
         self.edge_1 = torch.tensor(train['userId'].values-1)
         self.edge_2 = torch.tensor(train['movieId'].values-1) +num_u

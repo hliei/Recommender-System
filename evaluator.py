@@ -9,7 +9,7 @@ class evaluator():
         self.reco = reco
         self.data = data_class
         self.N = np.array(N)
-        self.threshold = 3.5 # to generate ground truth set
+        self.threshold = 3.5 
         
         all_items = set(np.arange(1,data_class.num_v + 1))
         tot_items = set(data_class.train['movieId']).union(set(data_class.test['movieId']))
@@ -22,9 +22,9 @@ class evaluator():
         
     
     def __gen_ground_truth_set(self):
-        self.GT = dict() # a dict storing the ground truth set for each user
+        self.GT = dict() 
         temp = deepcopy(self.data.test)
-        temp = temp[temp['rating']>self.threshold].values[:,:-1]-1 # get the userId and movieId with intrest edge of the test set
+        temp = temp[temp['rating']>self.threshold].values[:,:-1]-1 
         for j in range(self.data.num_u):
             if len(temp[temp[:,0]==j][:,1])>0: 
                 self.GT[j] = temp[temp[:,0]==j][:,1]

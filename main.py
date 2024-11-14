@@ -4,7 +4,7 @@ from torch import optim
 
 from tqdm import tqdm
 from evaluator import evaluator as ev
-from helper_func import  bipartite_dataset, deg_dist,gen_top_k
+from helper_func import  my_dataset, deg_dist,gen_top_k
 from data_loader import Data_loader
 from pngnn import PNGNN
 
@@ -18,7 +18,7 @@ def main(cfg):
     neg_dist = deg_dist(train,dataset.num_v)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model= PNGNN(train, dataset.num_u,dataset.num_v,threshold=cfg['threshold'],num_layers = cfg['num_layers'],MLP_layers=cfg['MLP_layers'],dim=cfg['dim'],device=device,reg=cfg['reg'])
+    model= PNGNN(train, dataset.num_u,dataset.num_v,threshold=cfg['threshold'],num_layers = cfg['num_layers'],dim=cfg['dim'],device=device,reg=cfg['reg'])
     model.data_p.to(device)
     model.to(device)
     optimizer = optim.Adam(model.parameters(), lr = cfg['lr'])
@@ -26,12 +26,11 @@ def main(cfg):
     
     print("Training starts...")
     model.train()
-    training_dataset=bipartite_dataset(train,neg_dist,cfg['threshold'],dataset.num_u,dataset.num_v,cfg['num_neg_samples'])
+    training_dataset=my_dataset(train,neg_dist,cfg['threshold'],dataset.num_u,dataset.num_v,cfg['num_neg_samples'])
     
     for EPOCH in range(1,cfg['epoch']+1):
         LOSS=0
         total_counts=0
-        #training_dataset.edge_4 = training_dataset.edge_4_tot[:,:,EPOCH%20-1]
         training_dataset.negs_gen_()
         
         ds = DataLoader(training_dataset,batch_size=cfg['batch_size'],shuffle=True)
@@ -51,7 +50,7 @@ def main(cfg):
         pbar.close()
         print('Epoch : %s, Loss : %s'%(EPOCH,LOSS/total_counts))
 
-        if EPOCH%20 ==1:
+        if EPOCH%5 ==1:
 
             model.eval()
             emb = model.get_embedding()
@@ -74,8 +73,7 @@ cfg = { 'version':1,
         'threshold':3.5,
         'num_neg_samples':40,
         'num_layers':4,
-        'MLP_layers':2,
-        'epoch':100,
+        'epoch':50,
         'reg':0.05
 }
 
