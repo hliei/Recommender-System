@@ -5,8 +5,8 @@ class Data_loader():
         self.sep='::'
         self.names=['userId','movieId','rating','timestemp'];            
         self.path_for_whole='./ml-1m_ori/ratings.dat'
-        self.path_for_train='./ml-1m_split/train.dat'
-        self.path_for_test='./ml-1m_split/test.dat'
+        self.path_for_train='./ml-1m_split/train1.dat'
+        self.path_for_test='./ml-1m_split/test1.dat'
         self.num_u=6040; self.num_v=3952
         
 
