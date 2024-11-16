@@ -4,7 +4,6 @@ from torch.utils.data import Dataset, DataLoader
 import os
 class MovieLensDataset(Dataset):
     def __init__(self, ratings_file, users_file, movies_file):
-        # 加载数据
         self.ratings = pd.read_csv(ratings_file, sep='::', names=['UserID', 'MovieID', 'Rating', 'Timestamp'], engine='python', encoding='ISO-8859-1')
         self.users = pd.read_csv(users_file, sep='::', names=['UserID', 'Gender', 'Age', 'Occupation', 'Zip-code'], engine='python', encoding='ISO-8859-1')
         self.movies = pd.read_csv(movies_file, sep='::', names=['MovieID', 'Title', 'Genres'], engine='python', encoding='ISO-8859-1')
